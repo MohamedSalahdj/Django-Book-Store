@@ -40,4 +40,3 @@ class Publisher(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(Publisher, self).save(*args, **kwargs)
-        
