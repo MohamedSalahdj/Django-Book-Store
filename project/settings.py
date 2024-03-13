@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     # ourapps
     'book.apps.BookConfig',
+    'rate.apps.RateConfig'
 
 ]
 
