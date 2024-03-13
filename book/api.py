@@ -59,3 +59,5 @@ class BookUpdateApi(generics.RetrieveUpdateAPIView):
 
 class BookDeleteApi(generics.DestroyAPIView):
     queryset = Book.objects.all()
+
+
