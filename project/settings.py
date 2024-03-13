@@ -44,8 +44,15 @@ INSTALLED_APPS = [
 
     # ourapps
     'book.apps.BookConfig',
+    'rate.apps.RateConfig'
 
 ]
+
+# paganation 
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 30
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
