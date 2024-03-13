@@ -1,6 +1,6 @@
 from django.db import models
 from book.models import Book
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 
 class Rate(models.Model):
     #user

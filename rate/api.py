@@ -10,7 +10,11 @@ from .serializers import *
 #     return Response ({'data':data})
 
 
-class ListAndCreateRates(generics.ListCreateAPIView):
+class ListRates(generics.ListAPIView):
+    queryset=Rate.objects.all()
+    serializer_class=RateSerializer
+
+class CreateRates(generics.CreateAPIView):
     queryset=Rate.objects.all()
     serializer_class=RateSerializer
 
