@@ -46,3 +46,16 @@ class BookCreateApi(generics.CreateAPIView):
     def perform_create(self, serializer):
         publisher = self.request.user
         serializer.save(publisher=publisher)    
+
+class BookUpdateApi(generics.RetrieveUpdateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_update(self, serializer):
+        publisher = self.request.user
+        serializer.save(publisher=publisher)   
+
+
+class BookDeleteApi(generics.DestroyAPIView):
+    queryset = Book.objects.all()

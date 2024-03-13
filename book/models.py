@@ -15,9 +15,9 @@ class Category(models.Model):
 
 
 book_language = (
-    ('ar', 'Arabic'),
-    ('en', 'English'),
-    ('fr', 'French')
+    ('Arabic', 'Arabic'),
+    ('English', 'English'),
+    ('French', 'French')
 )
 
 class Book(models.Model):
@@ -25,7 +25,7 @@ class Book(models.Model):
     img = models.ImageField(upload_to='book/')
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
-    language = models.CharField(max_length=2, choices=book_language)
+    language = models.CharField(max_length=7, choices=book_language)
     no_of_page = models.IntegerField()
     year_of_publication = models.DateField()
     total_number_of_book = models.IntegerField()
