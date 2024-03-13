@@ -17,3 +17,6 @@ class Author(models.Model):
     @classmethod
     def create_author(cls, f_name, l_name, disc):
         cls.objects.create(f_name=f_name, l_name=l_name, biography=disc)
+    
+    def __str__(self):
+        return f'{self.f_name} {self.l_name}'
