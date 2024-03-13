@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 
+#^ ----------------------------------------------  Author model -----------------------------------------
 class Author(models.Model):
     """Author: reprsents the author of book and inherits from
         the base baseuser django model
@@ -20,3 +22,21 @@ class Author(models.Model):
     
     def __str__(self):
         return f'{self.f_name} {self.l_name}'
+
+#^ ----------------------------------------------  Publisher model -----------------------------------------
+
+class Publisher(models.Model):
+    name = models.CharField(max_length=50)
+    email = models.EmailField(max_length=50)
+    password = models.CharField(max_length=50)
+    certificate = models.FileField(upload_to='certificate/',blank=True,null=True)
+    createdate=models.DateTimeField(auto_now_add=False)
+    updatedate=models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.name, self.email, self.password,self.certificate}'
+    
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Publisher, self).save(*args, **kwargs)
+        
