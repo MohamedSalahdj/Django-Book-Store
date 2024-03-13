@@ -30,7 +30,7 @@ class Publisher(models.Model):
     name = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=50, unique=True)
     password = models.CharField(max_length=50)
-    certificate = models.FileField(upload_to='certificate/',blank=True,null=True)
+    certificate = models.FileField(upload_to='certificate/')
     creation_date = models.DateTimeField(auto_now_add=True)
     updatedate=models.DateTimeField(auto_now=True)
 
