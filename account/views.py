@@ -6,7 +6,7 @@ from rest_framework.authentication import SessionAuthentication, BasicAuthentica
 from rest_framework.permissions import IsAuthenticated
 from .models import Author
 from .serializer import AuthorSerializer
-
+from rest_framework.pagination import PageNumberPagination
 
 
 @api_view(['GET', 'POST'])
@@ -16,10 +16,12 @@ def getall_authors(request):
     or
     create a new one
     """
+    paginator = PageNumberPagination()
     authors = Author.objects.all()
     if request.method == 'GET':
-        authors_serializer = AuthorSerializer(authors, many=True)
-        return Response (authors_serializer.data, status=status.HTTP_200_OK)
+        result_page = paginator.paginate_queryset(authors, request)
+        authors_serializer = AuthorSerializer(result_page, many=True)
+        return paginator.get_paginated_response(authors_serializer.data)
     else:
         data = request.data
         author_serializer = AuthorSerializer(data=data)
