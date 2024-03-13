@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from django.utils import timezone
 
 #^ ----------------------------------------------  Author model -----------------------------------------
 class Author(models.Model):
@@ -30,7 +31,7 @@ class Publisher(models.Model):
     email = models.EmailField(max_length=50)
     password = models.CharField(max_length=50)
     certificate = models.FileField(upload_to='certificate/',blank=True,null=True)
-    createdate=models.DateTimeField(auto_now_add=False)
+    creation_date = models.DateTimeField(auto_now_add=True)
     updatedate=models.DateTimeField(auto_now=True)
 
     def __str__(self):
