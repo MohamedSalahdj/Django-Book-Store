@@ -2,8 +2,9 @@ from django.urls import path
 from .api import *
 
 urlpatterns = [
-    path('gatallrates/',ListAndCreateRates.as_view(),name="allRatesClassBased"),
-    path('getratebyid/<int:id>',GetRateById.as_view(),name="getratebyid"),
-    path('deleteratebyid/<int:id>',DeleteRateById.as_view(),name="deleteratebyid"),
-    path('updateratebyid/<int:id>',UpdateRateById.as_view(),name="updateratebyid"),
+    path('get-all-rates/',ListRates.as_view(),name="allRatesClassBased"),
+    path('get-rate/<int:id>',GetRateById.as_view(),name="get-rate"),
+    path('create-rate/',CreateRates.as_view(),name="create-rate"),
+    path('delete-rate/<int:id>',DeleteRateById.as_view(),name="delete-rate"),
+    path('update-rate/<int:id>',UpdateRateById.as_view(),name="update-rate"),
 ]
