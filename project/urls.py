@@ -19,11 +19,18 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from rate.api import *
+from rest_framework import routers
+from order.views import OrderViewSet
+
+router = routers.DefaultRouter()
+router.register(r'', OrderViewSet,basename='orderlist')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('book.urls')),
     path('account/', include('account.urls')),
-    path('rate/',include('rate.urls'))
+    path('rate/',include('rate.urls')),
+    path('orderlist/',include(router.urls)),
+    path('api-order/', include('rest_framework.urls')),
 ]
 
 
