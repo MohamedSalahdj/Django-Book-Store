@@ -11,7 +11,6 @@ class Orderlist(models.Model):
         ('cancelled', 'Cancelled'),
     )
     
-
     book_name = models.CharField(max_length=20, validators=[MinLengthValidator(3)])
     price = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(1)])
     quantity = models.IntegerField(validators=[MinValueValidator(1)])
