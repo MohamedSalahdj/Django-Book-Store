@@ -27,6 +27,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000', 
+    'http://127.0.0.1:3000',    
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -41,11 +47,13 @@ INSTALLED_APPS = [
 
     #libraries 
     'rest_framework',
+    'corsheaders',
 
     # ourapps
     'book.apps.BookConfig',
     'rate.apps.RateConfig',
     'order.apps.OrderConfig',
+    
 
 ]
 
@@ -56,6 +64,8 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+   
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
