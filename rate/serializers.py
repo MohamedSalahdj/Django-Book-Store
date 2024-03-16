@@ -4,6 +4,7 @@ class RateSerializer(serializers.ModelSerializer):
     class Meta:
         model=Rate
         fields='__all__'
+        extra_kwargs = {'book': {'required': True},'user': {'required': True}}
     
     # def validate(self,data):
     #     if data['rate']!=None:
