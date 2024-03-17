@@ -29,6 +29,10 @@ class Book(models.Model):
     no_of_page = models.IntegerField()
     year_of_publication = models.DateField()
     total_number_of_book = models.IntegerField()
+    
+    # ISBN
+    # endcover
+    
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='book_category')
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='book_author')
     publisher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='publisher_book')
