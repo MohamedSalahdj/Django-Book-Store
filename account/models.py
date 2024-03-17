@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 from django.utils.text import slugify
 from django.utils import timezone
 
@@ -40,4 +40,3 @@ class Publisher(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(Publisher, self).save(*args, **kwargs)
-        

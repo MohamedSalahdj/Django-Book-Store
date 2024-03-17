@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import Author
 from .serializer import AuthorSerializer
 from rest_framework.pagination import PageNumberPagination
@@ -16,6 +16,8 @@ from django.contrib.auth.decorators import login_required
 
 
 @api_view(['GET', 'POST'])
+# @authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def getall_authors(request):
     """
     End point to return all the authors 
@@ -25,6 +27,9 @@ def getall_authors(request):
     paginator = PageNumberPagination()
     authors = Author.objects.all()
     if request.method == 'GET':
+        print(request.user)
+        print(request.user.is_superuser)
+        print(request.auth)
         result_page = paginator.paginate_queryset(authors, request)
         authors_serializer = AuthorSerializer(result_page, many=True)
         return paginator.get_paginated_response(authors_serializer.data)
