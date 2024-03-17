@@ -54,3 +54,8 @@ class UpdateRateById(generics.UpdateAPIView):
     # permission_classes = [IsAuthenticated]   -->Uncomment for authentication
     # permission_classes = (CustomPermission,)
 
+@api_view(['GET'])
+def allBookRates(req,id):
+    all_rates=Rate.objects.all()
+    data= RateSerializer(Rate.GetBookRates(id),many=True).data
+    return Response ({'data':data})

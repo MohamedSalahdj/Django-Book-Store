@@ -9,4 +9,7 @@ class Rate(models.Model):
     review=models.TextField(null=True,blank=True)
     rate= models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     creation_date = models.DateTimeField(auto_now_add=True)
-
+    
+    @classmethod
+    def GetBookRates(self,id):
+        return self.objects.filter(book=id)
