@@ -24,6 +24,8 @@ class CustomUser(AbstractBaseUser):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
 
+    is_publisher = models.BooleanField(default=False)
+
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
 
@@ -34,3 +36,14 @@ class CustomUser(AbstractBaseUser):
 
     def __str__(self):
         return self.email
+
+
+class CustomPublisher(CustomUser):
+    certificate = models.FileField(upload_to='certificate/')
+    
+    def save(self, *args, **kwargs):
+        self.is_publisher = True
+        super().save(*args, **kwargs)
+
+    
+
