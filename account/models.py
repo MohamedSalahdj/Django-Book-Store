@@ -33,6 +33,7 @@ class Publisher(models.Model):
     certificate = models.FileField(upload_to='certificate/', blank=True, null=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     updatedate = models.DateTimeField(auto_now=True)
+    
 
     def __str__(self):
         return f'{self.name, self.email, self.password,self.certificate}'
@@ -40,4 +41,3 @@ class Publisher(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super(Publisher, self).save(*args, **kwargs)
-        
