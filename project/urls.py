@@ -31,6 +31,8 @@ urlpatterns = [
     path('rate/',include('rate.urls')),
     path('orderlist/',include(router.urls)),
     path('api-order/', include('rest_framework.urls')),
+    path('users/', include('users.urls')),
+ 
 ]
 
 
