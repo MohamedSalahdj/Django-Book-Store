@@ -28,7 +28,8 @@ def getall_authors(request):
     authors = Author.objects.all()
     if request.method == 'GET':
         print(request.user)
-        print(request.user.is_superuser)
+        print(request.user.id)
+        print(request.user.is_staff)
         print(request.auth)
         result_page = paginator.paginate_queryset(authors, request)
         authors_serializer = AuthorSerializer(result_page, many=True)
@@ -44,7 +45,7 @@ def getall_authors(request):
         return Response(author_serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'DELETE', 'PUT', 'PATCH'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
+# @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])         
 def get_author_id(request, id):
     """
