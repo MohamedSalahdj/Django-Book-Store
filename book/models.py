@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from account.models import Author
+from users.models import CustomUser, CustomPublisher
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(null=True, blank=True, unique=True)
@@ -29,13 +30,9 @@ class Book(models.Model):
     no_of_page = models.IntegerField()
     year_of_publication = models.DateField()
     total_number_of_book = models.IntegerField()
-    
-    # ISBN
-    # endcover
-    
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='book_category')
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='book_author')
-    publisher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='publisher_book')
+    publisher = models.ForeignKey(CustomPublisher, on_delete=models.CASCADE, related_name='publisher_book')
     slug  = models.SlugField(null=True, blank=True)
     
     def __str__(self):
