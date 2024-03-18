@@ -41,7 +41,7 @@ def book_details(request, slug):
 class BookCreateApi(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         publisher = self.request.user
