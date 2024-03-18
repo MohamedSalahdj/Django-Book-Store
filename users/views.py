@@ -1,6 +1,6 @@
 from rest_framework import generics
-from .models import CustomUser
-from .serializers import UserSerializer
+from .models import CustomUser, CustomPublisher
+from .serializers import UserSerializer, PublisherSerializer
 
 class CreateUser(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
@@ -21,3 +21,8 @@ class UpdateUser(generics.UpdateAPIView):
 class DeleteUser(generics.DestroyAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
+
+
+class CreatePublisher(generics.CreateAPIView):
+    queryset = CustomPublisher.objects.all()
+    serializer_class = PublisherSerializer
