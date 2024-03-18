@@ -9,7 +9,7 @@ class Rate(models.Model):
     book=models.ForeignKey(Book,on_delete=models.CASCADE,related_name="book_review",default=None)
     review=models.TextField(null=True,blank=True)
     rate= models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
-    creation_date = models.DateTimeField(auto_now_add=True)
+    creation_date = models.DateField(auto_now_add=True)
     
     @classmethod
     def GetBookRates(self,id):
