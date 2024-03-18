@@ -56,6 +56,6 @@ class UpdateRateById(generics.UpdateAPIView):
 
 @api_view(['GET'])
 def allBookRates(req,id):
-    all_rates=Rate.objects.all()
-    data= RateSerializer(Rate.GetBookRates(id),many=True).data
+    all_rates=Rate.objects.filter(book=id)
+    data= RateSerializer(all_rates,many=True).data
     return Response ({'data':data})
