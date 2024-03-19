@@ -75,7 +75,7 @@ def delete_order(request,pk):
     order =get_object_or_404(Order, id=pk) 
     order.delete()
       
-    return Response({'details': "order is deleted"})
+    return Response({'msg': "order is deleted"})
 
 
 
