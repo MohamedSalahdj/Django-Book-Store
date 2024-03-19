@@ -4,5 +4,17 @@ from .models import Order,OrderItem
 
 
 
-admin.site.register(Order)
-admin.site.register(OrderItem)
+
+class OrderAdmin(admin.ModelAdmin):
+   
+    list_display = ['id', 'user', 'ordered_date', 'status', 'is_orderd']
+    
+    
+   
+    
+
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ['book', 'order', 'price', 'quantity', 'total_price']
+
+admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderItem, OrderItemAdmin)

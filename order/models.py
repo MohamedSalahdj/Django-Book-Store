@@ -10,25 +10,33 @@ class OrderStatus(models.TextChoices):
     CANCELLED = 'Cancelled'
 
 class Order(models.Model):
-    user = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE)
-    order_date = models.DateField(auto_now_add=True)
-    is_ordered = models.BooleanField()
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='orders')
+    ordered_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=20, choices=OrderStatus.choices, default=OrderStatus.PENDING)
+    quantity = models.IntegerField(validators=[MinValueValidator(1)])  
+    is_orderd = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-ordered_date']
 
     def __str__(self):
-        return 'User: ' + self.user.first_name + ' ' + self.user.last_name + ', Order Id: ' + str(self.id)
+        return f"Order {self.id} by {self.user.first_name}"  
+
 
 class OrderItem(models.Model):
+
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orderitems')
-    # book_name = models.CharField(max_length=20, validators=[MinLengthValidator(3)])
-    # book_image = models.ImageField(upload_to='orderdbooks', default='default.png') 
     price = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(1)])
-    quantity = models.IntegerField(validators=[MinValueValidator(1)])
-    status = models.CharField(max_length=60, choices=OrderStatus.choices, default=OrderStatus.PENDING)
-
+    quantity = models.IntegerField(validators=[MinValueValidator(1)])   
     @property
     def total_price(self):
         return self.price * self.quantity
 
     def __str__(self):
-        return self.book_name
+        return f"{self.book.name}  ({self.quantity})"
+
+
+
+   

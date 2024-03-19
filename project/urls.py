@@ -27,10 +27,9 @@ from rest_framework_simplejwt.views import (
 )
 
 from rest_framework import routers
-from order.views import OrderViewSet
 
-router = routers.DefaultRouter()
-router.register(r'', OrderViewSet,basename='orderlist')
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('book.urls')),
@@ -39,9 +38,8 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('orderlist/',include(router.urls)),
-    path('api-order/', include('rest_framework.urls')),
     path('users/', include('users.urls')),
+    path('api-order/', include('order.urls')),
  
 ]
 
