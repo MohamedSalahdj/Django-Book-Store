@@ -1,6 +1,11 @@
 from rest_framework import serializers
 from rate.models import Rate
 class RateSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+
+    def get_full_name(self, object):
+        name = object.user.first_name+" "+object.user.last_name
+        return name
     class Meta:
         model=Rate
         fields='__all__'
