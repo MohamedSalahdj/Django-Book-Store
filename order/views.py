@@ -50,8 +50,8 @@ def get_orders(request):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def get_order(request,pk):
-    order =get_object_or_404(Order, id=pk)
+def get_order(request,id):
+    order =get_object_or_404(Order, id=id)
 
     serializer = OrderSerializer(order,many=False)
     return Response({'order':serializer.data})
@@ -71,8 +71,8 @@ def update_order(request,id):
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def delete_order(request,pk):
-    order =get_object_or_404(Order, id=pk) 
+def delete_order(request,id):
+    order =get_object_or_404(Order, id=id) 
     order.delete()
       
     return Response({'msg': "order is deleted"})
