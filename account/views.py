@@ -16,8 +16,7 @@ from django.contrib.auth.decorators import login_required
 
 
 @api_view(['GET', 'POST'])
-# @authentication_classes([TokenAuthentication])
-# @permission_classes([IsAuthenticated, IsAdminUser])
+@permission_classes([IsAuthenticated])
 def getall_authors(request):
     """
     End point to return all the authors 
@@ -45,7 +44,6 @@ def getall_authors(request):
         return Response(author_serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'DELETE', 'PUT', 'PATCH'])
-# @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])         
 def get_author_id(request, id):
     """

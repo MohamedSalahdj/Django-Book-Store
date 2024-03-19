@@ -35,7 +35,6 @@ class Category(models.Model):
 book_language = (
     ('Arabic', 'Arabic'),
     ('English', 'English'),
-    ('French', 'French')
 )
 
 class Book(models.Model):
@@ -48,7 +47,7 @@ class Book(models.Model):
     language = models.CharField(max_length=7, choices=book_language)
     no_of_page = models.IntegerField(null=True, blank=True)
     year_of_publication = models.DateField()
-    total_number_of_book = models.IntegerField(null=True, blank=True)
+    total_number_of_book = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='book_category')
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='book_author')
     publisher = models.ForeignKey(CustomPublisher, on_delete=models.CASCADE, related_name='publisher_book')
