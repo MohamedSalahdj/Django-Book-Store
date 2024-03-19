@@ -11,16 +11,10 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 class AuthorSerializer(serializers.ModelSerializer):
     """Serialize author attributes to return when
         the end point is called"""
-    # value = serializers.SerializerMethodField()
-    # label = serializers.SerializerMethodField()
+
     class Meta:
         model = Author
-        # fields = ('value', 'label', 'f_name', 'l_name')
         fields = '__all__'
-    # def get_value(self, obj):
-    #     return obj.id
-    # def get_label(self, obj):
-    #     return {obj.f_name}
  
 #^ ----------------------------------------------  Publisher Serializer -----------------------------------------       
 class PublisherSerializer(serializers.ModelSerializer):

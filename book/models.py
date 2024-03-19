@@ -14,23 +14,6 @@ class Category(models.Model):
         self.slug = slugify(self.name)
         super(Category, self).save(*args, **kwargs)
 
-    @classmethod
-    def create_categ(cls):
-        cls.objects.create(name="Fiction")
-        cls.objects.create(name="Nonfiction")
-        cls.objects.create(name="Action and adventure")
-        cls.objects.create(name="Art/architecture")
-        cls.objects.create(name="Autobiography")
-        cls.objects.create(name="Anthology")
-        cls.objects.create(name="Biography")
-        cls.objects.create(name="Classic")
-        cls.objects.create(name="Cookbook")
-        cls.objects.create(name="Dictionary")
-        cls.objects.create(name="Guide")
-        cls.objects.create(name="Humor")
-        cls.objects.create(name="Horror")
-        cls.objects.create(name="Journal")
-
 
 book_language = (
     ('Arabic', 'Arabic'),
@@ -40,15 +23,13 @@ book_language = (
 
 class Book(models.Model):
     name = models.CharField(max_length=255)
-    ISBN = models.CharField(max_length=255, unique=True)
-    front_img = models.ImageField(upload_to='book/')
-    back_img = models.ImageField(upload_to='book/')
+    img = models.ImageField(upload_to='book/')
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
     language = models.CharField(max_length=7, choices=book_language)
-    no_of_page = models.IntegerField(null=True, blank=True)
+    no_of_page = models.IntegerField()
     year_of_publication = models.DateField()
-    total_number_of_book = models.IntegerField(null=True, blank=True)
+    total_number_of_book = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='book_category')
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='book_author')
     publisher = models.ForeignKey(CustomPublisher, on_delete=models.CASCADE, related_name='publisher_book')

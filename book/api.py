@@ -4,7 +4,7 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .models import Category, Book
 from .serializer import CategorySerializer, BookSerializer
-from users.models import CustomPublisher
+
 class CategoryListApi(generics.ListAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -41,11 +41,10 @@ def book_details(request, slug):
 class BookCreateApi(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        # publisher = self.request.user
-        publisher = CustomPublisher.objects.get(id=self.request.user.id)
+        publisher = self.request.user
         serializer.save(publisher=publisher)    
 
 class BookUpdateApi(generics.RetrieveUpdateAPIView):

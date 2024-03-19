@@ -17,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 
 @api_view(['GET', 'POST'])
 # @authentication_classes([TokenAuthentication])
-# @permission_classes([IsAuthenticated, IsAdminUser])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def getall_authors(request):
     """
     End point to return all the authors 
