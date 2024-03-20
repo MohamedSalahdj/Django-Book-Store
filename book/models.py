@@ -4,6 +4,7 @@ from django.utils.text import slugify
 from account.models import Author
 from users.models import CustomUser, CustomPublisher
 from slugify import slugify_unicode
+
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(null=True, blank=True, unique=True)
