@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from django.core.validators import MinLengthValidator
-from users.models import CustomUser
+from users.models import CustomUser, CustomPublisher
 from book.models import Book
 
 class OrderStatus(models.TextChoices):
@@ -16,6 +16,7 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=OrderStatus.choices, default=OrderStatus.PENDING)
     quantity = models.IntegerField(validators=[MinValueValidator(1)])  
     is_orderd = models.BooleanField(default=False)
+    # delivery_time = 
 
     class Meta:
         ordering = ['-ordered_date']
@@ -25,8 +26,8 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    publisher = models.ForeignKey(CustomPublisher, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orderitems')
     price = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(1)])
     quantity = models.IntegerField(validators=[MinValueValidator(1)])   
@@ -38,3 +39,23 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.book.name}  ({self.quantity})"
 
+
+cart_sataus = (
+    ('InProgress', 'InProgress'),
+    ('Completed', 'Completed')
+
+)
+
+class Cart(models.Model):
+    customer = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='carts')
+    status = models.CharField(max_length=10, choices=cart_sataus)
+
+    def __str__(self):
+        return str(self.customer.first_name).capitalize() + ' ' + str(self.customer.last_name).capitalize()
+
+class CartIetm(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    publisher = models.ForeignKey(CustomPublisher, on_delete=models.CASCADE)
+    Book = models.ForeignKey(Book , on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1)
+    total = models.FloatField(null=True, blank=True)
