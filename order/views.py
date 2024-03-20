@@ -3,12 +3,10 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated ,IsAdminUser
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
-from .models import Order, OrderItem, Cart, CartIetm
+from .models import Order, OrderItem, Cart, CartItem
 from .serializers import OrderItemsSerializer, OrderSerializer, CartSerializer, CartItemSerializer
 from book.models import Book, Category
 from users.models import CustomUser, CustomPublisher
-
-# Create your views here.
 
 
 @api_view(['POST'])
@@ -80,13 +78,19 @@ def delete_order(request,id):
 
 
 
+class CartDetailCreateAPI(generics.GenericAPIView):
+    serializer_class = CartSerializer
+    
+    def get(self, request, *args, **kwargs):
+        customer = CustomUser.objects.get(id=self.kwargs['id'])
+        cart, created = Cart.objects.get_or_create(customer=customer, status='InProgress')
+        data = CartSerializer(cart).data
+        return Response({'cart':data}) 
+ 
+    def post(request):
+        pass
 
-
-
-
-
-
-
+   
 
 
 
