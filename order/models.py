@@ -30,6 +30,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orderitems')
     price = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(1)])
     quantity = models.IntegerField(validators=[MinValueValidator(1)])   
+    
     @property
     def total_price(self):
         return self.price * self.quantity
@@ -37,6 +38,3 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.book.name}  ({self.quantity})"
 
-
-
-   
