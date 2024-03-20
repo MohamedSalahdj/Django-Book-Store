@@ -92,20 +92,16 @@ class CartDetailCreateAPI(generics.GenericAPIView):
         book = Book.objects.get(id=request.data['book_id'])
         publisher = CustomPublisher.objects.get(id=request.data['CustomPublisher_id'])
         quantity = int(request.data['total_number_of_book'])
-        
         cart = Cart.objects.get(customer=customer, status='InProgress')
         cart_item, created = CartItem.objects.get_or_create(cart=cart, book=book, publisher=publisher)
         cart_item.quantity = int(quantity)
+        
         cart_item.total = round(int(quantity) * book.price, 2)
         cart_item.save()
-
-
         cart = Cart.objects.get(customer=customer, status='InProgress')
         data = CartSerializer(cart).data
-        return Response({'msg':'book added successfully', 'cart':data})
 
-
-
+        return Response({'msg' : 'book added successfully', 'cart':data})
 
     def delete(self, request, *args, **kwargs):
         customer = CustomUser.objects.get(id=self.kwargs['id'])
