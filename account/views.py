@@ -26,10 +26,6 @@ def getall_authors(request):
     paginator = PageNumberPagination()
     authors = Author.objects.all()
     if request.method == 'GET':
-        print(request.user)
-        print(request.user.id)
-        print(request.user.is_staff)
-        print(request.auth)
         result_page = paginator.paginate_queryset(authors, request)
         authors_serializer = AuthorSerializer(result_page, many=True)
         return paginator.get_paginated_response(authors_serializer.data)
