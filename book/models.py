@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from account.models import Author
 from users.models import CustomUser, CustomPublisher
+from slugify import slugify_unicode
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(null=True, blank=True, unique=True)
@@ -39,6 +40,7 @@ class Book(models.Model):
         return f'{ self.name} | By- {self.author.f_name} {self.author.l_name}'
     
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        print(slugify_unicode(self.name))
+        self.slug = slugify_unicode(self.name)
         super(Book, self).save(*args, **kwargs)
 
