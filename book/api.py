@@ -4,19 +4,9 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from .models import Category, Book
 from .serializer import CategorySerializer, BookSerializer
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 from users.models import CustomPublisher
 from rest_framework.pagination import PageNumberPagination
 
->>>>>>> DashboardWithReact
-=======
-
-from users.models import CustomPublisher
-from rest_framework.pagination import PageNumberPagination
-
->>>>>>> origin/DashboardWithReact
 
 class CategoryListApi(generics.ListAPIView):
     queryset = Category.objects.all()
