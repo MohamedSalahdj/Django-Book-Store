@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from django.utils import timezone
+
 from account.models import Author
 from users.models import CustomUser, CustomPublisher
 from slugify import slugify_unicode
@@ -55,8 +57,9 @@ class Book(models.Model):
     slug  = models.SlugField(null=True, blank=True)
     
     def __str__(self):
-        return f'{ self.name} | By- {self.author.f_name} {self.author.l_name}'
-    
+        # return f'{ self.name} | By- {self.author.f_name} {self.author.l_name}'
+        return self.name
+
     def save(self, *args, **kwargs):
         print(slugify_unicode(self.name))
         self.slug = slugify_unicode(self.name)

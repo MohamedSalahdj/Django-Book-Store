@@ -3,12 +3,10 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated ,IsAdminUser
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
-from .models import Order, OrderItem, Cart, CartIetm
+from .models import Order, OrderItem, Cart, CartItem
 from .serializers import OrderItemsSerializer, OrderSerializer, CartSerializer, CartItemSerializer
 from book.models import Book, Category
 from users.models import CustomUser, CustomPublisher
-
-# Create your views here.
 
 
 @api_view(['POST'])
@@ -80,16 +78,39 @@ def delete_order(request,id):
 
 
 
+class CartDetailCreateAPI(generics.GenericAPIView):
+    serializer_class = CartSerializer
+    
+    def get(self, request, *args, **kwargs):
+        customer = CustomUser.objects.get(id=self.kwargs['id'])
+        cart, created = Cart.objects.get_or_create(customer=customer, status='InProgress')
+        data = CartSerializer(cart).data
+        return Response({'cart':data}) 
+ 
+    def post(self, request, *args, **kwargs):
+        customer = CustomUser.objects.get(id=self.kwargs['id'])
+        book = Book.objects.get(id=request.data['book_id'])
+        publisher = CustomPublisher.objects.get(id=request.data['CustomPublisher_id'])
+        quantity = int(request.data['total_number_of_book'])
+        cart = Cart.objects.get(customer=customer, status='InProgress')
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, book=book, publisher=publisher)
+        cart_item.quantity = int(quantity)
+        
+        cart_item.total = round(int(quantity) * book.price, 2)
+        cart_item.save()
+        cart = Cart.objects.get(customer=customer, status='InProgress')
+        data = CartSerializer(cart).data
 
+        return Response({'msg' : 'book added successfully', 'cart':data})
 
+    def delete(self, request, *args, **kwargs):
+        customer = CustomUser.objects.get(id=self.kwargs['id'])
+        cart_item = CartItem.objects.get(id=request.data['cart_item_id'])
+        cart_item.delete()
 
-
-
-
-
-
-
-
+        cart = Cart.objects.get(customer=customer, status='InProgress')
+        data = CartSerializer(cart).data
+        return Response({'msg':'book deleted successfully', 'cart':data})
 
 
 
