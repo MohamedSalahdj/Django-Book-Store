@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.text import slugify
+# from django.utils.text import slugify
 from django.utils import timezone
 
 from account.models import Author
