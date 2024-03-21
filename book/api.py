@@ -68,6 +68,7 @@ class BookUpdateApi(generics.RetrieveUpdateAPIView):
 
 
 class BookDeleteApi(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Book.objects.all()
 
 
