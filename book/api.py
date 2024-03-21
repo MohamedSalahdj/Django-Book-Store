@@ -36,20 +36,14 @@ class BookListApi(generics.ListAPIView):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def book_details(request, slug):
-    book = Book.objects.get(slug=slug)
+def book_details(request, id):
+    book = Book.objects.get(id=id)
     if request.user.id == book.publisher_id:
         print("Authorsized")
         data = BookSerializer(book, context={'request':request}).data
         return Response({'book':data})
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def book_details_byid(request, id):
-    book = Book.objects.get(id=id)
-    if request.user.id == book.publisher_id:
-        print("Authorsized")
-    data = BookSerializer(book, context={'request':request}).data
-    return Response({'book':data})
+    else:
+        return Response({"Erorr": "You are not the book Publisher"})
 
 
 class BookCreateApi(generics.CreateAPIView):
