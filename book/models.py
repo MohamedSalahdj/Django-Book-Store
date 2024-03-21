@@ -1,11 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils.text import slugify
+# from django.utils.text import slugify
 from django.utils import timezone
 
 from account.models import Author
 from users.models import CustomUser, CustomPublisher
-from slugify import slugify_unicode
+from slugify import slugify
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(null=True, blank=True, unique=True)
@@ -61,7 +61,7 @@ class Book(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        print(slugify_unicode(self.name))
-        self.slug = slugify_unicode(self.name)
+        print(slugify(self.name))
+        self.slug = slugify(self.name)
         super(Book, self).save(*args, **kwargs)
 
