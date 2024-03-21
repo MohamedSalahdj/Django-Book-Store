@@ -7,7 +7,7 @@ urlpatterns = [
     path('<int:pk>/', GetUser.as_view(), name='user-detail'),
     path('<int:pk>/update/', UpdateUser.as_view(), name='user-update'),
     path('<int:pk>/delete/', DeleteUser.as_view(), name='user-delete'),
-    path('users/<int:pk>/change-password/', ChangeUserPassword.as_view()),
+    path('<int:pk>/change-password/', ChangeUserPassword.as_view()),
 
     # publisher 
     path('create-publisher/', CreatePublisher.as_view(), name='create_publisher')
