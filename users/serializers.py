@@ -24,3 +24,9 @@ class PublisherSerializer(serializers.ModelSerializer):
         publisher.certificate = certificate
         publisher.save()
         return publisher
+
+
+class ChangeUserPasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    confirm_password = serializers.CharField(required=True)       
