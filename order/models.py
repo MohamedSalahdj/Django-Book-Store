@@ -6,7 +6,7 @@ from users.models import CustomUser, CustomPublisher
 from book.models import Book
 
 class OrderStatus(models.TextChoices):
-    PENDING = 'Pending'
+    PENDING   = 'Pending'
     COMPLETED = 'Completed'
     CANCELLED = 'Cancelled'
 
@@ -27,8 +27,8 @@ class Order(models.Model):
 
 
 class OrderItem(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    publisher = models.ForeignKey(CustomPublisher, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='order_item_book')
+    publisher = models.ForeignKey(CustomPublisher, on_delete=models.CASCADE, related_name='order_item_publisher')
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='orderitems')
     price = models.DecimalField(max_digits=5, decimal_places=2, validators=[MinValueValidator(1)])
     quantity = models.IntegerField(validators=[MinValueValidator(1)])   

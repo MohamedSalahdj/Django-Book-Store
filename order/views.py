@@ -14,6 +14,7 @@ from users.models import CustomUser, CustomPublisher
 def add_order(request):
     user = request.user 
     data = request.data
+
     order_items = data['order_Items']
 
     if order_items and len(order_items) == 0:
@@ -44,7 +45,7 @@ def add_order(request):
 def get_orders(request):
     orders = Order.objects.all()
     serializer = OrderSerializer(orders,many=True)
-    return Response({'orders':serializer.data})
+    return Response({'orders' : serializer.data})
 
 
 @api_view(['GET'])
@@ -58,14 +59,14 @@ def get_order(request,id):
 
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated,IsAdminUser])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def update_order(request,id):
-    order =get_object_or_404(Order, id=id)
+    order = get_object_or_404(Order, id=id)
     order.status = request.data['status']
     order.save()
      
-    serializer = OrderSerializer(order,many=False)
-    return Response({'order':serializer.data})
+    serializer = OrderSerializer(order, many=False)
+    return Response({'order': serializer.data})
 
 
 @api_view(['DELETE'])
@@ -80,13 +81,12 @@ def delete_order(request,id):
 
 class CartDetailCreateAPI(generics.GenericAPIView):
     serializer_class = CartSerializer
-    
     def get(self, request, *args, **kwargs):
         customer = CustomUser.objects.get(id=self.kwargs['id'])
         cart, created = Cart.objects.get_or_create(customer=customer, status='InProgress')
         data = CartSerializer(cart).data
         return Response({'cart':data}) 
- 
+    
     def post(self, request, *args, **kwargs):
         customer = CustomUser.objects.get(id=self.kwargs['id'])
         book = Book.objects.get(id=request.data['book_id'])
