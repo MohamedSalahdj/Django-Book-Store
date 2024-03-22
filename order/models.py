@@ -86,6 +86,6 @@ class CartItem(models.Model):
 
 class Payment(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='payment_order')
-    card_number = CardNumberField(True,blank=True)
-    expire = CardExpiryField(True,blank=True)
-    security_code = SecurityCodeField(True,blank=True)
+    card_number = CardNumberField(blank=True)
+    expire = CardExpiryField(blank=True)
+    security_code = SecurityCodeField(blank=True)
