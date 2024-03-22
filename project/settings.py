@@ -77,7 +77,7 @@ REST_FRAMEWORK = {
 #jwt token settings
 SIMPLE_JWT = {
     
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=500),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,   #--> As long as the user is active generate a new refresh token to calculate the lifetime data when the user is inactive only
     "BLACKLIST_AFTER_ROTATION": True,  #--> to blacklist all refresh token but the latest one

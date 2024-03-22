@@ -38,8 +38,13 @@ class BookListApi(generics.ListAPIView):
 @permission_classes([IsAuthenticated])
 def book_details(request, id):
     book = Book.objects.get(id=id)
+    data = BookSerializer(book, context={'request':request}).data
+    return Response({'book':data})
+ 
+
+def book_details_by_publisher(request, id):
+    book = Book.objects.get(id=id)
     if request.user.id == book.publisher_id:
-        print("Authorsized")
         data = BookSerializer(book, context={'request':request}).data
         return Response({'book':data})
     else:
@@ -61,13 +66,19 @@ class BookUpdateApi(generics.RetrieveUpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]
-
+    print("called")
     def perform_update(self, serializer):
-        publisher = self.request.user
+        print("called second")
+        publisher = CustomPublisher.objects.get(id = self.request.user.id)
         serializer.save(publisher=publisher)   
+    
+    def patch(self, request, *args, **kwargs):
+        print(request.data)
+        return super().patch(request, *args, **kwargs)
 
 
 class BookDeleteApi(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Book.objects.all()
 
 

@@ -7,65 +7,114 @@ from .models import Order, OrderItem, Cart, CartItem
 from .serializers import OrderItemsSerializer, OrderSerializer, CartSerializer, CartItemSerializer
 from book.models import Book, Category
 from users.models import CustomUser, CustomPublisher
+from rest_framework import status
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def add_order(request):
-    user = request.user 
-    data = request.data
-    order_items = data['order_Items']
+# @api_view(['POST'])
+# @permission_classes([IsAuthenticated])
+# def add_order(request):
+#     user = request.user 
+#     data = request.data
 
-    if order_items and len(order_items) == 0:
-       return Response({'error': 'No order recieved'},status=status.HTTP_400_BAD_REQUEST)
-    else:
-        # total_amount = sum( item['price']* item['quantity'] for item in order_items)
-        order = Order.objects.create(
-            user = user,
-            status= data['status'],
-            quantity = data['quantity'],
-            # total_amount = total_amount,
+#     order_items = data['order_Items']
+
+#     if order_items and len(order_items) == 0:
+#        return Response({'error': 'No order recieved'},status=status.HTTP_400_BAD_REQUEST)
+#     else:
+#         # total_amount = sum( item['price']* item['quantity'] for item in order_items)
+#         order = Order.objects.create(
+#             user = user,
+#             status= data['status'],
+#             quantity = data['quantity'],
+#             # total_amount = total_amount,
+#         )
+#         for i in order_items:
+#             book = Book.objects.get(id=i['book'])
+#             item = OrderItem.objects.create(
+#                 book= book,
+#                 order = order,
+#                 quantity = i['quantity'],
+#                 price = i['price']
+#             )
+#             book.total_number_of_book -= item.quantity
+#             book.save()
+#         serializer = OrderSerializer(order,many=False)
+#         return Response(serializer.data)
+
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def get_orders(request):
+#     orders = Order.objects.all()
+#     serializer = OrderSerializer(orders,many=True)
+#     return Response({'orders':serializer.data})
+
+
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def get_order(request,id):
+#     order =get_object_or_404(Order, id=id)
+
+#     serializer = OrderSerializer(order,many=False)
+#     return Response({'order':serializer.data})
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def get_publisher_orders(request, publisher_id):
+    orders = Order.objects.filter(orderitems__publisher_id=publisher_id)
+    serializer = OrderSerializer(orders, many=True)
+    return Response({'orders': serializer.data})
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def get_customer_orders(request, customer_id):
+    orders = Order.objects.filter(user_id=customer_id)
+    serializer = OrderSerializer(orders, many=True)
+    return Response({'orders': serializer.data})
+
+
+
+class CreateOrderAPI(generics.GenericAPIView):
+    
+    def get(self, request, *args, **kwargs):
+        customer = CustomUser.objects.get(id=self.kwargs['id'])
+        cart = Cart.objects.get(customer=customer, status='InProgress')
+        cart_items = CartItem.objects.filter(cart=cart)
+        # address_id
+        # user_address
+
+        new_order = Order.objects.create(
+            user = customer,
+            status = 'Received',
+            total = cart.cart_total
+            # customer_address
+            
         )
-        for i in order_items:
-            book = Book.objects.get(id=i['book'])
-            item = OrderItem.objects.create(
-                book= book,
-                order = order,
-                quantity = i['quantity'],
-                price = i['price']
+
+        for item in cart_items:
+            book = Book.objects.get(id=item.book.id)
+            OrderItem.objects.create(
+                book = book , 
+                publisher = item.publisher,
+                order = new_order , 
+                price = book.price , 
+                quantity = item.quantity , 
+                total = round(item.quantity * book.price, 2)
             )
-            book.total_number_of_book -= item.quantity
-            book.save()
-        serializer = OrderSerializer(order,many=False)
-        return Response(serializer.data)
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_orders(request):
-    orders = Order.objects.all()
-    serializer = OrderSerializer(orders,many=True)
-    return Response({'orders':serializer.data})
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_order(request,id):
-    order =get_object_or_404(Order, id=id)
-
-    serializer = OrderSerializer(order,many=False)
-    return Response({'order':serializer.data})
-
+        cart.status = 'Completed'
+        cart.save()
+        return Response({'msg':'order was created successfully'},status=status.HTTP_201_CREATED)
 
 
 @api_view(['PUT'])
-@permission_classes([IsAuthenticated,IsAdminUser])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def update_order(request,id):
-    order =get_object_or_404(Order, id=id)
+    order = get_object_or_404(Order, id=id)
     order.status = request.data['status']
     order.save()
      
-    serializer = OrderSerializer(order,many=False)
-    return Response({'order':serializer.data})
+    serializer = OrderSerializer(order, many=False)
+    return Response({'order': serializer.data})
 
 
 @api_view(['DELETE'])
@@ -80,13 +129,12 @@ def delete_order(request,id):
 
 class CartDetailCreateAPI(generics.GenericAPIView):
     serializer_class = CartSerializer
-    
     def get(self, request, *args, **kwargs):
         customer = CustomUser.objects.get(id=self.kwargs['id'])
         cart, created = Cart.objects.get_or_create(customer=customer, status='InProgress')
         data = CartSerializer(cart).data
         return Response({'cart':data}) 
- 
+    
     def post(self, request, *args, **kwargs):
         customer = CustomUser.objects.get(id=self.kwargs['id'])
         book = Book.objects.get(id=request.data['book_id'])

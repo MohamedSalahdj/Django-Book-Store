@@ -3,16 +3,12 @@ from .models import Order,OrderItem, Cart, CartItem
 # Register your models here.
 
 
-
-
 class OrderAdmin(admin.ModelAdmin):
    
     list_display = ['id', 'user', 'ordered_date', 'status', 'is_orderd']
     
     
    
-    
-
 class OrderItemAdmin(admin.ModelAdmin):
     list_display = ['book', 'order', 'price', 'quantity', 'total_price']
 
