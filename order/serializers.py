@@ -21,7 +21,8 @@ class OrderSerializer(serializers.ModelSerializer):
     
 
 class CartItemSerializer(serializers.ModelSerializer):
-    book = serializers.StringRelatedField()
+    # book = serializers.StringRelatedField()
+    book = BookSerializer()
     class Meta:
         model = CartItem
         fields = '__all__'
