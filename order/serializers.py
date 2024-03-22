@@ -3,6 +3,7 @@ from .models import Order, OrderItem, Cart, CartItem
 from book.serializer import BookSerializer
 
 class OrderItemsSerializer(serializers.ModelSerializer):
+    book = BookSerializer()
     class Meta:
         model = OrderItem
         fields = "__all__"
