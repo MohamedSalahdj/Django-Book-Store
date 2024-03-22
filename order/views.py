@@ -4,9 +4,9 @@ from rest_framework.permissions import IsAuthenticated ,IsAdminUser
 from rest_framework import generics
 from rest_framework.decorators import api_view, permission_classes
 from .models import Order, OrderItem, Cart, CartItem
-from .serializers import OrderItemsSerializer, OrderSerializer, CartSerializer, CartItemSerializer
+from .serializers import OrderItemsSerializer, OrderSerializer, CartSerializer, CartItemSerializer, PaymentSerializer
 from book.models import Book, Category
-from users.models import CustomUser, CustomPublisher
+from users.models import CustomUser, CustomPublisher, Address
 from rest_framework import status
 
 
@@ -73,38 +73,102 @@ def get_customer_orders(request, customer_id):
 
 
 
+# class CreateOrderAPI(generics.GenericAPIView):
+    
+#     def post(self, request, *args, **kwargs):
+#         customer = CustomUser.objects.get(id=self.kwargs['id'])
+#         cart = Cart.objects.get(customer=customer, status='InProgress')
+#         cart_items = CartItem.objects.filter(cart=cart)
+#         address = request.data['address_id'] 
+#         customer_address = Address.objects.get(id=address)
+        
+        
+#         payment_data = request.data.get('payment')
+#         payment_serializer = PaymentSerializer(data=payment_data)
+
+#         new_order = Order.objects.create(
+#             user = customer,
+#             status = 'Received',
+#             total = cart.cart_total,
+#             delivery_address=  customer_address,
+#             # payment=payment
+#         )
+        
+#         if payment_serializer.is_valid():
+#             print('here------->',new_order)
+#             payment = payment_serializer.save(commit=False)
+#             payment.order= new_order
+#             payment.save()
+#         else:
+#             return Response(payment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#         for item in cart_items:
+#             book = Book.objects.get(id=item.book.id)
+#             OrderItem.objects.create(
+#                 book = book , 
+#                 publisher = item.publisher,
+#                 order = new_order , 
+#                 price = book.price , 
+#                 quantity = item.quantity , 
+#                 total = round(item.quantity * book.price, 2)
+#             )
+#             book.total_number_of_book -= item.quantity
+#             book.save()
+
+#         cart.status = 'Completed'
+#         cart.save()
+
+#         return Response({'msg':'order was created successfully'},status=status.HTTP_201_CREATED)
+#     # else:
+#     #     return Response(payment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class CreateOrderAPI(generics.GenericAPIView):
     
-    def get(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         customer = CustomUser.objects.get(id=self.kwargs['id'])
         cart = Cart.objects.get(customer=customer, status='InProgress')
         cart_items = CartItem.objects.filter(cart=cart)
-        # address_id
-        # user_address
-
+        address = request.data['address_id'] 
+        customer_address = Address.objects.get(id=address)
+        
         new_order = Order.objects.create(
-            user = customer,
-            status = 'Received',
-            total = cart.cart_total
-            # customer_address
-            
+            user=customer,
+            status='Received',
+            total=cart.cart_total,
+            delivery_address=customer_address
         )
+
+        
+        payment_data = request.data.get('payment')
+        payment_data['order'] = new_order.pk  
+        payment_serializer = PaymentSerializer(data=payment_data)
+
+        if payment_serializer.is_valid():
+            payment_instance = payment_serializer.save()
+            new_order.payment_order.add(payment_instance)
+        else:
+            
+            new_order.delete()
+            return Response(payment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         for item in cart_items:
             book = Book.objects.get(id=item.book.id)
             OrderItem.objects.create(
-                book = book , 
-                publisher = item.publisher,
-                order = new_order , 
-                price = book.price , 
-                quantity = item.quantity , 
-                total = round(item.quantity * book.price, 2)
+                book=book,
+                publisher=item.publisher,
+                order=new_order,
+                price=book.price,
+                quantity=item.quantity,
+                total=round(item.quantity * book.price, 2)
             )
+            book.total_number_of_book -= item.quantity
+            book.save()
 
         cart.status = 'Completed'
         cart.save()
-        return Response({'msg':'order was created successfully'},status=status.HTTP_201_CREATED)
 
+        return Response({'msg': 'Order was created successfully'}, status=status.HTTP_201_CREATED)
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated, IsAdminUser])

@@ -47,5 +47,9 @@ class CustomPublisher(CustomUser):
         self.is_publisher = True
         super().save(*args, **kwargs)
 
+
+class Address(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user_address')
+    address = models.TextField(max_length=300)
     
 
