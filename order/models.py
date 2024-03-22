@@ -60,3 +60,13 @@ class CartItem(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='cart_item_book')
     quantity = models.IntegerField(default=1)
     total = models.FloatField(null=True, blank=True)
+
+
+
+
+
+
+
+
+
+
