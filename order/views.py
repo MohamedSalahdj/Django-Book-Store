@@ -40,21 +40,35 @@ def add_order(request):
         serializer = OrderSerializer(order,many=False)
         return Response(serializer.data)
 
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def get_orders(request):
+#     orders = Order.objects.all()
+#     serializer = OrderSerializer(orders,many=True)
+#     return Response({'orders':serializer.data})
+
+
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def get_order(request,id):
+#     order =get_object_or_404(Order, id=id)
+
+#     serializer = OrderSerializer(order,many=False)
+#     return Response({'order':serializer.data})
+
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_orders(request):
-    orders = Order.objects.all()
-    serializer = OrderSerializer(orders,many=True)
-    return Response({'orders' : serializer.data})
-
+# @permission_classes([IsAuthenticated])
+def get_publisher_orders(request, publisher_id):
+    orders = Order.objects.filter(orderitems__publisher_id=publisher_id)
+    serializer = OrderSerializer(orders, many=True)
+    return Response({'orders': serializer.data})
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def get_order(request,id):
-    order =get_object_or_404(Order, id=id)
-
-    serializer = OrderSerializer(order,many=False)
-    return Response({'order':serializer.data})
+# @permission_classes([IsAuthenticated])
+def get_customer_orders(request, customer_id):
+    orders = Order.objects.filter(user_id=customer_id)
+    serializer = OrderSerializer(orders, many=True)
+    return Response({'orders': serializer.data})
 
 
 

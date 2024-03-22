@@ -1,13 +1,15 @@
 from rest_framework import serializers
 from .models import Order, OrderItem, Cart, CartItem
 from book.serializer import BookSerializer
+
 class OrderItemsSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = "__all__"
 
 class OrderSerializer(serializers.ModelSerializer):
-    orderItems = serializers.SerializerMethodField(method_name="get_order_items", read_only=True)
+    # orderItems = serializers.SerializerMethodField(method_name="get_order_items", read_only=True)
+    orderitems = OrderItemsSerializer(many=True)
     class Meta:
         model = Order
         fields = "__all__"
@@ -19,7 +21,8 @@ class OrderSerializer(serializers.ModelSerializer):
     
 
 class CartItemSerializer(serializers.ModelSerializer):
-    book = serializers.StringRelatedField()
+    # book = serializers.StringRelatedField()
+    book = BookSerializer()
     class Meta:
         model = CartItem
         fields = '__all__'
