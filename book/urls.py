@@ -11,6 +11,7 @@ urlpatterns = [
     path('list-book/', BookListApi.as_view(), name='list_book'),
     path('get-publisher-books/',get_publisher_books, name='publisher_books'),
     path('<int:id>-book/details',  book_details, name='book_details'),
+    path('<int:id>-publisherbook/details', book_details_by_publisher),
     path('add-book/', BookCreateApi.as_view(), name='add_book'),    
     path('<int:pk>-book/update',  BookUpdateApi.as_view(), name='book_details'),
     path('<int:pk>-book/delete', BookDeleteApi.as_view(), name='delete_book'),
