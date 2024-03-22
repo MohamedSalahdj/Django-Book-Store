@@ -4,6 +4,9 @@ from django.core.validators import MinLengthValidator
 from django.utils import timezone
 from users.models import CustomUser, CustomPublisher
 from book.models import Book
+from users.models import Address
+from creditcards.models import CardNumberField, CardExpiryField, SecurityCodeField
+
 
 # class OrderStatus(models.TextChoices):
 #     PENDING   = 'Pending'
@@ -24,7 +27,9 @@ class Order(models.Model):
     # quantity = models.IntegerField(validators=[MinValueValidator(1)])  
     total = models.FloatField()
     is_orderd = models.BooleanField(default=False)
-    # delivery_time = 
+    delivery_address = models.ForeignKey(Address, on_delete=models.SET_NULL, related_name='delivery_order_address', null=True, blank=True)
+    # delivery_time =
+    # is_payment = 
 
     class Meta:
         ordering = ['-ordered_date']
@@ -76,3 +81,11 @@ class CartItem(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='cart_item_book')
     quantity = models.IntegerField(default=1)
     total = models.FloatField(null=True, blank=True)
+
+
+
+class Payment(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='payment_order')
+    card_number = CardNumberField(blank=True)
+    expire = CardExpiryField(blank=True)
+    security_code = SecurityCodeField(blank=True)

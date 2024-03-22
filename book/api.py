@@ -6,6 +6,10 @@ from .models import Category, Book
 from .serializer import CategorySerializer, BookSerializer
 from users.models import CustomPublisher
 from rest_framework.pagination import PageNumberPagination
+from django.db import models
+from django.db.models import Avg
+from rest_framework.views import APIView
+from rest_framework import status
 
 
 class CategoryListApi(generics.ListAPIView):
@@ -93,3 +97,9 @@ def get_publisher_books(request):
     return paginator.get_paginated_response(books_serializer.data)
 
 
+#api for home page 
+class BestRatedBooksAPIView(APIView):
+    def get(self, request):
+        best_books = Book.objects.annotate(avg_rating=Avg('book_review__rate')).order_by('-avg_rating')[:4]
+        serializer = BookSerializer(best_books, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

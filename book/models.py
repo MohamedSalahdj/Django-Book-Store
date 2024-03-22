@@ -4,11 +4,15 @@ from django.utils.text import slugify
 from django.utils import timezone
 from account.models import Author
 from users.models import CustomUser, CustomPublisher
+from django.db.models.aggregates import Avg
+# from rate.models import Rate
+
 # from slugify import slugify_unicode
 
 class Category(models.Model):
     name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(null=True, blank=True, unique=True)
+    
 
     def __str__(self):
         return self.name
@@ -59,6 +63,10 @@ class Book(models.Model):
     def __str__(self):
         # return f'{ self.name} | By- {self.author.f_name} {self.author.l_name}'
         return self.name
+
+    def avg_rate(self):
+        avg = self.book_review.aggregate(book_avg=Avg('rate'))
+        return round(avg['book_avg'], 2) if avg['book_avg'] else 0 
 
     def save(self, *args, **kwargs):
         # print(slugify_unicode(self.name))
