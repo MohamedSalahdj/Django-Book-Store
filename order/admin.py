@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Order,OrderItem,Cart,CartItem
+from .models import Order,OrderItem, Cart, CartItem
 # Register your models here.
 
 
@@ -15,3 +16,5 @@ admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderItem, OrderItemAdmin)
 
 
+admin.site.register(Cart)
+admin.site.register(CartItem)
