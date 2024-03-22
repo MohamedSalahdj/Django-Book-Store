@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-
+from django.core.validators import MinLengthValidator
 # Create your models here.
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, first_name, last_name, password=None):
@@ -23,6 +23,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+    phone=models.CharField(max_length=11,validators=[MinLengthValidator(11)],null=True,blank=True)
+    Profile_Pic= models.ImageField(upload_to='Profile/',null=True,blank=True)
 
     is_publisher = models.BooleanField(default=False)
 

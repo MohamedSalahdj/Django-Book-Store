@@ -4,7 +4,7 @@ from .models import CustomUser, CustomPublisher
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('id', 'email', 'first_name', 'last_name', 'password')
+        fields = ('id', 'email', 'first_name', 'last_name', 'password','phone','Profile_Pic')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -24,3 +24,9 @@ class PublisherSerializer(serializers.ModelSerializer):
         publisher.certificate = certificate
         publisher.save()
         return publisher
+
+
+class ChangeUserPasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    confirm_password = serializers.CharField(required=True)       

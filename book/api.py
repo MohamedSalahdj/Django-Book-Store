@@ -61,13 +61,19 @@ class BookUpdateApi(generics.RetrieveUpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated]
-
+    print("called")
     def perform_update(self, serializer):
-        publisher = self.request.user
+        print("called second")
+        publisher = CustomPublisher.objects.get(id = self.request.user.id)
         serializer.save(publisher=publisher)   
+    
+    def patch(self, request, *args, **kwargs):
+        print(request.data)
+        return super().patch(request, *args, **kwargs)
 
 
 class BookDeleteApi(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Book.objects.all()
 
 
