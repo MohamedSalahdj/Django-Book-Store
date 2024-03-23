@@ -89,3 +89,14 @@ def get_author_id(request, id):
             'Msg': 'Author updated successfully'
         }, status=status.HTTP_200_OK)
         return Response(author_serializer.errors,  status=status.HTTP_400_BAD_REQUEST)
+
+@permission_classes([IsAuthenticated])         
+@api_view(['GET'])
+def get_authors_by_publihser(request):
+    paginator = PageNumberPagination()
+    authors = Author.objects.filter(publisher_id = request.user.id)
+    result_page = paginator.paginate_queryset(authors, request)
+    author_serialzer = AuthorSerializer(result_page, many=True)
+    return paginator.get_paginated_response(author_serialzer.data)
+
+

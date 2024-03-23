@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User, AbstractUser
 from django.utils.text import slugify
 from django.utils import timezone
+from users.models import CustomPublisher
 
 #^ ----------------------------------------------  Author model -----------------------------------------
 class Author(models.Model):
@@ -16,6 +17,7 @@ class Author(models.Model):
     f_name = models.CharField(max_length=50)
     l_name = models.CharField(max_length=50)
     biography = models.TextField(blank=True,null=True)
+    publisher = models.ForeignKey(CustomPublisher, on_delete=models.CASCADE)
 
     @classmethod
     def create_author(cls, f_name, l_name, disc):
