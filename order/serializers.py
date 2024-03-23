@@ -18,7 +18,7 @@ class OrderItemsSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     # orderItems = serializers.SerializerMethodField(method_name="get_order_items", read_only=True)
     orderitems = OrderItemsSerializer(many=True)
-    payment = PaymentSerializer()
+    # payment = PaymentSerializer()
     class Meta:
         model = Order
         fields = "__all__"
