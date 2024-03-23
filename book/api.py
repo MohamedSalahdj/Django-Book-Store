@@ -106,3 +106,7 @@ class BestRatedBooksAPIView(APIView):
         best_books = Book.objects.annotate(avg_rating=Avg('book_review__rate')).order_by('-avg_rating')[:4]
         serializer = BookSerializer(best_books, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+
+class BestSellerBookAPIView(APIView):
+    pass
