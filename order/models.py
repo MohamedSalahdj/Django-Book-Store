@@ -21,8 +21,9 @@ order_status = (
 )
 class Order(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='orders')
-    ordered_date = models.DateTimeField(default=timezone.now)
-    updated_date = models.DateTimeField(auto_now=True)
+    ordered_date = models.DateField(auto_now_add=True)
+    updated_date = models.DateField(auto_now_add=True)
+
     status = models.CharField(max_length=20, choices=order_status)
     # quantity = models.IntegerField(validators=[MinValueValidator(1)])  
     total = models.FloatField()

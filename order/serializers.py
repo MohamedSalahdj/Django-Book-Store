@@ -11,6 +11,7 @@ class PaymentSerializer(serializers.ModelSerializer):
 
 class OrderItemsSerializer(serializers.ModelSerializer):
     book = BookSerializer()
+    total_price = OrderItem.total_price
     class Meta:
         model = OrderItem
         fields = "__all__"
