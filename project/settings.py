@@ -39,6 +39,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 INSTALLED_APPS = [
     'account.apps.AccountConfig',
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
