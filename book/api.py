@@ -49,6 +49,7 @@ def book_details(request, id):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def book_details_by_publisher(request, id):
+    
     book = Book.objects.get(id=id)
     if request.user.id == book.publisher_id:
         data = BookSerializer(book, context={'request':request}).data
