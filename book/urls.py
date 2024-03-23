@@ -18,4 +18,6 @@ urlpatterns = [
 
     # home page api
     path('best-rated-books/', BestRatedBooksAPIView.as_view(), name='best_rated_books'),
+
+    
 ]

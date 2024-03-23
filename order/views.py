@@ -11,8 +11,11 @@ from .models import Order, OrderItem, Cart, CartItem
 from .serializers import OrderItemsSerializer, OrderSerializer, CartSerializer, CartItemSerializer, PaymentSerializer
 from book.models import Book, Category
 from users.models import CustomUser, CustomPublisher, Address
+from users.serializers import AddressSerializer
 from rest_framework import status
 from rest_framework.response import Response
+from django.conf import settings
+import stripe
 
 
 
@@ -35,84 +38,51 @@ def get_customer_orders(request, customer_id):
     serializer = OrderSerializer(orders, many=True)
     return Response({'orders': serializer.data})
 
-
-
-# class CreateOrderAPI(generics.GenericAPIView):
-    
-#     def post(self, request, *args, **kwargs):
-#         customer = CustomUser.objects.get(id=self.kwargs['id'])
-#         cart = Cart.objects.get(customer=customer, status='InProgress')
-#         cart_items = CartItem.objects.filter(cart=cart)
-#         address = request.data['address_id'] 
-#         customer_address = Address.objects.get(id=address)
-        
-        
-#         payment_data = request.data.get('payment')
-#         payment_serializer = PaymentSerializer(data=payment_data)
-
-#         new_order = Order.objects.create(
-#             user = customer,
-#             status = 'Received',
-#             total = cart.cart_total,
-#             delivery_address=  customer_address,
-#             # payment=payment
-#         )
-        
-#         if payment_serializer.is_valid():
-#             print('here------->',new_order)
-#             payment = payment_serializer.save(commit=False)
-#             payment.order= new_order
-#             payment.save()
-#         else:
-#             return Response(payment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#         for item in cart_items:
-#             book = Book.objects.get(id=item.book.id)
-#             OrderItem.objects.create(
-#                 book = book , 
-#                 publisher = item.publisher,
-#                 order = new_order , 
-#                 price = book.price , 
-#                 quantity = item.quantity , 
-#                 total = round(item.quantity * book.price, 2)
-#             )
-#             book.total_number_of_book -= item.quantity
-#             book.save()
-
-#         cart.status = 'Completed'
-#         cart.save()
-
-#         return Response({'msg':'order was created successfully'},status=status.HTTP_201_CREATED)
-#     # else:
-#     #     return Response(payment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 class CreateOrderAPI(generics.GenericAPIView):
-    
+
     def post(self, request, *args, **kwargs):
         customer = CustomUser.objects.get(id=self.kwargs['id'])
+        print(customer)
         cart = Cart.objects.get(customer=customer, status='InProgress')
         cart_items = CartItem.objects.filter(cart=cart)
-        address = request.data['address_id'] 
-        customer_address = Address.objects.get(id=address)
         
+    
+        address_data = request.data.get('address')
+        address_data['user'] = customer.pk
+        address_serializer = AddressSerializer(data=address_data)
+        if address_serializer.is_valid():
+            address_instance = address_serializer.save()
+        else:
+            return Response(address_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         new_order = Order.objects.create(
             user=customer,
             status='Received',
             total=cart.cart_total,
-            delivery_address=customer_address
+            delivery_address=address_instance  
         )
-
         
+        stripe.api_key = settings.STRIPE_API_KEY_SECRET
         payment_data = request.data.get('payment')
-        payment_data['order'] = new_order.pk  
+        
+        try:
+            payment_intent = stripe.PaymentIntent.create(
+                amount=int(cart.cart_total * 100),  
+                currency='usd',
+                description='Payment for Order #{}'.format(new_order.pk),
+                metadata={'order_id': new_order.pk},
+            )
+        except stripe.error.StripeError as e:
+            new_order.delete()
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        payment_data['order'] = new_order.pk
         payment_serializer = PaymentSerializer(data=payment_data)
 
         if payment_serializer.is_valid():
             payment_instance = payment_serializer.save()
             new_order.payment_order.add(payment_instance)
         else:
-            
             new_order.delete()
             return Response(payment_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -133,6 +103,7 @@ class CreateOrderAPI(generics.GenericAPIView):
         cart.save()
 
         return Response({'msg': 'Order was created successfully'}, status=status.HTTP_201_CREATED)
+
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated, IsAdminUser])
