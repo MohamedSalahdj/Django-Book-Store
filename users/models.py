@@ -50,9 +50,11 @@ class CustomPublisher(CustomUser):
 
 class Address(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user_address')
-    address = models.TextField(max_length=300)
-    # country
-    # city
-    # street
-    # phone
+    country = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    street = models.CharField(max_length=300)
+    phone = models.CharField(max_length=11)
+
+    def __str__(self):
+        return f'address for {self.user.first_name} {self.user.last_name} : {self.country}, {self.city}'
     
