@@ -12,5 +12,4 @@ urlpatterns = [
     path('<int:id>/orders/create', CreateOrderAPI.as_view()),
     path('<int:id>/cart', CartDetailCreateAPI.as_view()),
     
-
 ]
