@@ -216,3 +216,8 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Example React development server
     # Add other origins as needed
 ]
+
+# STRIPE
+
+STRIPE_API_KEY_PUBLISHEABLE = 'pk_test_51OxVqC03w3rKHImN2rjy00aZkqKSxX4t7pnBi76LSeRBXAxrqaEVeWajuoCKMerSQnp96cwbheqw1hE8Qeq9OZuR00KUY5sSox'
+STRIPE_API_KEY_SECRET = 'sk_test_51OxVqC03w3rKHImNdlNGnLTXYSXiCSSlaVJziAMtyVQnU8HuEzEi17V2LI2tyv8x75oOmEGjrNEpkuRMvEV1avpP00Cw2K751A'
