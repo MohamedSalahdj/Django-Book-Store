@@ -99,4 +99,3 @@ def get_authors_by_publihser(request):
     author_serialzer = AuthorSerializer(result_page, many=True)
     return paginator.get_paginated_response(author_serialzer.data)
 
-

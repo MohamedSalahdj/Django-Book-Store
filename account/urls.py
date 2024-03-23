@@ -6,7 +6,8 @@ from .api import *
 urlpatterns = [
     #^ for Author
     path('authors-all/', getall_authors, name='authors-all'),
-    path('author/<int:id>', get_author_id, name='author-byid'),    
+    path('author/<int:id>', get_author_id, name='author-byid'),
+    path('publisher-authors/', get_authors_by_publihser),
     
     #^ for Pubisher
     path('publishers-all/',PublisherListApi.as_view(), name='publishers-all'),
