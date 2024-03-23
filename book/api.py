@@ -46,6 +46,8 @@ def book_details(request, id):
     return Response({'book':data})
  
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def book_details_by_publisher(request, id):
     book = Book.objects.get(id=id)
     if request.user.id == book.publisher_id:
