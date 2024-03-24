@@ -19,4 +19,5 @@ urlpatterns = [
     # home page api
     path('best-rated-books/', BestRatedBooksAPIView.as_view(), name='best_rated_books'),
     path('best-seller-books/', BestSellerBooksAPIView.as_view(), name='best_seller_books'),
+    path('<int:book_id>/related-books/', related_books)
 ]
