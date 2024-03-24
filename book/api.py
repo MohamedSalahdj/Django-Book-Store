@@ -107,6 +107,11 @@ class BestRatedBooksAPIView(APIView):
         serializer = BookSerializer(best_books, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+
+class BestSellerBookAPIView(APIView):
+    pass
+
+    
 @api_view(['GET'])
 def books_by_name(request,word):
         data = BookSerializer(Book.get_book_by_name(word), many=True).data
