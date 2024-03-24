@@ -41,7 +41,7 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('api-order/', include('order.urls')),
     path('api/', include('rest_framework.urls')),
- 
+   
 ]
 
 
