@@ -36,6 +36,14 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.id} by {self.user.first_name}"  
+    
+    @property
+    def order_total(self):
+        total = 0
+        for item in self.orderitems.all():
+            if item.total is not None:
+                total += item.total
+        return round(total,2)
 
 
 class OrderItem(models.Model):

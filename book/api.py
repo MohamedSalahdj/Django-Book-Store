@@ -110,6 +110,6 @@ class BestRatedBooksAPIView(APIView):
 
 class BestSellerBooksAPIView(APIView):
     def get(self, request):
-        best_books = Book.objects.annotate(total_sold=Sum('orderitem__quantity')).order_by('-total_sold')[:4]
+        best_books = Book.objects.annotate(total_sold=Sum('order_book_item__quantity')).order_by('-total_sold')[:4]
         serializer = BookSerializer(best_books, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
