@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'rate.apps.RateConfig',
     'order.apps.OrderConfig',
     'users.apps.UsersConfig',
-    'carts.apps.CartsConfig',
+   
    
 
    
