@@ -84,6 +84,7 @@ class Cart(models.Model):
 
     def __str__(self):
         return str(self.customer.first_name).capitalize() + ' ' + str(self.customer.last_name).capitalize()
+    
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items')
