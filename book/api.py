@@ -117,3 +117,13 @@ class BestSellerBooksAPIView(APIView):
 def books_by_name(request,word):
         data = BookSerializer(Book.get_book_by_name(word), many=True).data
         return Response({'book':data})
+
+@api_view(['GET'])
+def related_books(request, book_id):
+    try:
+        book = Book.objects.get(id=book_id)
+        related_books = book.related_books(num=3) 
+        serializer = BookSerializer(related_books, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Book.DoesNotExist:
+        return Response({"error": "Book not found"}, status=status.HTTP_404_NOT_FOUND)
