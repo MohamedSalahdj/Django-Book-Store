@@ -61,3 +61,8 @@ class ChangeUserPassword(generics.UpdateAPIView):
         self.object.save()
 
         return Response("Password changed successfully.", status=status.HTTP_200_OK)
+    
+
+class ListPublisherAPI(generics.ListAPIView):
+    queryset = CustomPublisher.objects.all()
+    serializer_class = PublisherSerializer
