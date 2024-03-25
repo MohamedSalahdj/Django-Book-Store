@@ -32,6 +32,7 @@ class CreatePublisher(generics.CreateAPIView):
 
 
 class ChangeUserPassword(generics.UpdateAPIView):
+    
     serializer_class = ChangeUserPasswordSerializer
     permission_classes = (permissions.IsAuthenticated,)
 

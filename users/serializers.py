@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, CustomPublisher
+from .models import CustomUser, CustomPublisher, Address
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,3 +30,8 @@ class ChangeUserPasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
     confirm_password = serializers.CharField(required=True)       
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = '__all__'

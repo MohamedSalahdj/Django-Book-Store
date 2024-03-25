@@ -15,7 +15,8 @@ urlpatterns = [
     path('add-book/', BookCreateApi.as_view(), name='add_book'),    
     path('<int:pk>-book/update',  BookUpdateApi.as_view(), name='book_details'),
     path('<int:pk>-book/delete', BookDeleteApi.as_view(), name='delete_book'),
-
+    path('<str:word>-book/search',books_by_name, name='book_search'),
     # home page api
     path('best-rated-books/', BestRatedBooksAPIView.as_view(), name='best_rated_books'),
+    path('best-seller-books/', BestSellerBooksAPIView.as_view(), name='best_seller_books'),
 ]
