@@ -39,7 +39,7 @@ class BookListApi(generics.ListAPIView):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def book_details(request, id):
     book = Book.objects.get(id=id)
     data = BookSerializer(book, context={'request':request}).data
