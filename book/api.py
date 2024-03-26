@@ -10,6 +10,7 @@ from django.db import models
 from django.db.models import Avg, Sum
 from rest_framework.views import APIView
 from rest_framework import status
+from .pagination import *
 
 
 class CategoryListApi(generics.ListAPIView):
@@ -35,6 +36,7 @@ class CategoryDeleteApi(generics.DestroyAPIView):
 
 class BookListApi(generics.ListAPIView):
     queryset = Book.objects.all()
+    pagination_class=CustomePageNumberPagination
     serializer_class = BookSerializer
 
 
