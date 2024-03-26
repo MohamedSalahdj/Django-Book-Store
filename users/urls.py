@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CreateUser, GetUsers, GetUser, UpdateUser, DeleteUser, CreatePublisher,ChangeUserPassword
+from .views import CreateUser, GetUsers, GetUser, UpdateUser, DeleteUser, CreatePublisher,ChangeUserPassword, ListPublisherAPI
 
 urlpatterns = [
     path('', GetUsers.as_view(), name='user-list'),
@@ -10,6 +10,7 @@ urlpatterns = [
     path('<int:pk>/change-password/', ChangeUserPassword.as_view()),
 
     # publisher 
-    path('create-publisher/', CreatePublisher.as_view(), name='create_publisher')
+    path('create-publisher/', CreatePublisher.as_view(), name='create_publisher'),
+    path('publisher-list/', ListPublisherAPI.as_view()),
 
 ]

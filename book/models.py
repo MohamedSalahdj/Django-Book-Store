@@ -73,3 +73,13 @@ class Book(models.Model):
         self.slug = slugify(self.name)
         super(Book, self).save(*args, **kwargs)
 
+    @classmethod
+    def get_book_by_name(self,word):
+        return self.objects.filter(name__icontains=word)
+
+
+    def related_books(self, num):
+        book_related = Book.objects.filter(category=self.category).exclude(id=self.id).distinct()[:num]
+        return book_related
+    
+    

@@ -37,6 +37,14 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order {self.id} by {self.user.first_name}"  
+    
+    @property
+    def order_total(self):
+        total = 0
+        for item in self.orderitems.all():
+            if item.total is not None:
+                total += item.total
+        return round(total,2)
 
   
 
@@ -76,6 +84,7 @@ class Cart(models.Model):
 
     def __str__(self):
         return str(self.customer.first_name).capitalize() + ' ' + str(self.customer.last_name).capitalize()
+    
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='cart_items')

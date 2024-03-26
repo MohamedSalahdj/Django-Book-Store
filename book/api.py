@@ -7,9 +7,10 @@ from .serializer import CategorySerializer, BookSerializer
 from users.models import CustomPublisher
 from rest_framework.pagination import PageNumberPagination
 from django.db import models
-from django.db.models import Avg
+from django.db.models import Avg, Sum
 from rest_framework.views import APIView
 from rest_framework import status
+from .pagination import *
 
 
 class CategoryListApi(generics.ListAPIView):
@@ -35,11 +36,12 @@ class CategoryDeleteApi(generics.DestroyAPIView):
 
 class BookListApi(generics.ListAPIView):
     queryset = Book.objects.all()
+    pagination_class=CustomePageNumberPagination
     serializer_class = BookSerializer
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def book_details(request, id):
     book = Book.objects.get(id=id)
     data = BookSerializer(book, context={'request':request}).data
@@ -107,6 +109,23 @@ class BestRatedBooksAPIView(APIView):
         serializer = BookSerializer(best_books, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+class BestSellerBooksAPIView(APIView):
+    def get(self, request):
+        best_books = Book.objects.annotate(total_sold=Sum('order_book_item__quantity')).order_by('-total_sold')[:4]
+        serializer = BookSerializer(best_books, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-class BestSellerBookAPIView(APIView):
-    pass
+@api_view(['GET'])
+def books_by_name(request,word):
+        data = BookSerializer(Book.get_book_by_name(word), many=True).data
+        return Response({'book':data})
+
+@api_view(['GET'])
+def related_books(request, book_id):
+    try:
+        book = Book.objects.get(id=book_id)
+        related_books = book.related_books(num=3) 
+        serializer = BookSerializer(related_books, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Book.DoesNotExist:
+        return Response({"error": "Book not found"}, status=status.HTTP_404_NOT_FOUND)
