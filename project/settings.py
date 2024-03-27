@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     "corsheaders",
+    
+
 
     # ourapps
     'book.apps.BookConfig',
@@ -67,15 +69,12 @@ INSTALLED_APPS = [
 # paganation 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 50,
+    'PAGE_SIZE': 30,
 
     #jwt authentication confgiurations
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny'
-    ]
+    )
 }
 
 #jwt token settings
@@ -220,8 +219,3 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Example React development server
     # Add other origins as needed
 ]
-
-# STRIPE
-
-STRIPE_API_KEY_PUBLISHEABLE = 'pk_test_51OximmRvjmJMvBZ1W5vM1dSagB3DLnbVRptkP0zRq8IvLa8iAGsoWfK4HCbZ9lyCAJezMX4jage5kauefkxOs8Of00UOQUu9Ys'
-STRIPE_API_KEY_SECRET = 'sk_test_51OximmRvjmJMvBZ1fXzEN8cymhOdtz8rnOGtPQEhFQIpTPDNb1JSLEA7UE2Vq3JnbXrlwEcu6JQ8oUclDtHRJs1g00G1GrKBFi'

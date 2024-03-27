@@ -29,8 +29,8 @@ from django.shortcuts import redirect
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 def get_publisher_orders(request, publisher_id):
-    orders = Order.objects.filter(orderitems__publisher_id=publisher_id)
-    serializer = OrderSerializer(orders, many=True)
+    orders = Order.objects.filter(orderitems__publisher_id=publisher_id).distinct()
+    serializer =OrderSerializer(orders, many=True)
     return Response({'orders': serializer.data})
 
 @api_view(['GET'])

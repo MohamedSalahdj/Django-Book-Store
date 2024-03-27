@@ -45,6 +45,9 @@ class Order(models.Model):
             if item.total is not None:
                 total += item.total
         return round(total,2)
+    @classmethod 
+    def get_publisher_orders(self,id) :
+        return OrderItem.get_publisher_orders(id)
 
   
 
@@ -59,6 +62,9 @@ class OrderItem(models.Model):
     @property
     def total_price(self):
         return self.price * self.quantity
+    @classmethod 
+    def get_publisher_orders(self,id) :
+        return  self.objects.filter(publisher=id)
 
     def __str__(self):
         return f"{self.book.name}  ({self.quantity})"
