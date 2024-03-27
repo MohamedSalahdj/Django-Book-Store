@@ -16,9 +16,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.conf import settings
 import stripe
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
-
+from django.views.decorators.csrf import csrf_exempt
+from django.core.mail import EmailMessage, send_mail
+from django.template.loader import render_to_string
 
 
 
@@ -29,8 +31,8 @@ from django.shortcuts import redirect
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 def get_publisher_orders(request, publisher_id):
-    orders = Order.objects.filter(orderitems__publisher_id=publisher_id)
-    serializer = OrderSerializer(orders, many=True)
+    orders = Order.objects.filter(orderitems__publisher_id=publisher_id).distinct()
+    serializer =OrderSerializer(orders, many=True)
     return Response({'orders': serializer.data})
 
 @api_view(['GET'])
@@ -174,14 +176,12 @@ class CartDetailCreateAPI(generics.GenericAPIView):
 
 
 class CreateOrderAPI(generics.GenericAPIView):
-    print("Called")
     def post(self, request, *args, **kwargs):
         customer = CustomUser.objects.get(id=self.kwargs['id'])
         print(customer)
         cart = Cart.objects.get(customer=customer, status='InProgress')
         cart_items = CartItem.objects.filter(cart=cart)
         YOUR_DOMAIN = "http://localhost:3000"
-        print("THE EMAIL IS ", request.POST)
         address_data = {
             "country": request.data.get('country'),
             "city": request.data.get('city'),
@@ -241,7 +241,7 @@ class CreateOrderAPI(generics.GenericAPIView):
             metadata={
                 "order_id": 1
             },
-            success_url = YOUR_DOMAIN  + '/?success=true/',
+            success_url = YOUR_DOMAIN  + '/orders',
             cancel_url =  YOUR_DOMAIN + '/checkout/'
         )
             print(checkout_session)
@@ -252,3 +252,36 @@ class CreateOrderAPI(generics.GenericAPIView):
             return Response({'My error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
        
 
+@csrf_exempt
+def stripe_webhook_view(request):
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+    print("WEEBHOOOK CALLED")
+    try:
+        event = stripe.Webhook.construct_event(
+        payload, sig_header, settings.STRIPE_SECRET_WEBHOOK
+        )
+    except ValueError as e:
+        # Invalid payload
+        return Response(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return Response(status=400)
+
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+
+        print(session)
+        customer_email=session['customer_details']['email']
+        print(customer_email)
+        #sending confimation mail
+        send_mail(
+            subject="payment sucessful",
+            message=f"thank for your purchase your order is ready.  download url ",
+            recipient_list=[customer_email],
+            from_email="alibayomy12@gmail.com"
+        )
+        
+    # Passed signature verification
+    return HttpResponse(status=200)

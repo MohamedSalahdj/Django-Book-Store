@@ -8,7 +8,7 @@ urlpatterns = [
     path('orders/customer/<int:customer_id>/', get_customer_orders, name='get_customer_orders'), 
     path('orders/<int:id>/Update/', update_order, name='update_order'), 
     path('orders/<int:id>/delete/', delete_order, name='delete_order'), 
-    
+    path('stripe-webhook/', stripe_webhook_view, name='stripe-webhook'),
     path('<int:id>/orders/create', CreateOrderAPI.as_view()),
     path('<int:id>/cart', CartDetailCreateAPI.as_view()),
     
