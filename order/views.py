@@ -36,16 +36,15 @@ def get_publisher_orders(request, publisher_id,page_num):
     paginated = Paginator(orders, 2)
     page = paginated.get_page(page_num)
     serializer =OrderSerializer(page, many=True)
-    if paginated.get_page(page_num).has_next():
-        return Response({'orders': serializer.data,'next':True})
-    else:
-        return Response({'orders': serializer.data,'next':False})
+    return Response({'orders': serializer.data,'next':paginated.get_page(page_num).has_next(),'count':orders.count()})
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
-def get_customer_orders(request, customer_id):
+def get_customer_orders(request, customer_id,page_num):
     orders = Order.objects.filter(user_id=customer_id)
-    serializer = OrderSerializer(orders, many=True)
-    return Response({'orders': serializer.data})
+    paginated = Paginator(orders, 2)
+    page = paginated.get_page(page_num)
+    serializer =OrderSerializer(page, many=True)
+    return Response({'orders': serializer.data,'next':paginated.get_page(page_num).has_next(),'count':orders.count()})
 
 # class CreateOrderAPI(generics.GenericAPIView):
 
