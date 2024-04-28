@@ -5,6 +5,7 @@ Django==5.0.3
 django-cors-headers==4.3.1
 django-credit-cards==0.4.1
 django-filter==24.1
+django-jazzmin==2.6.1
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
 idna==3.6
