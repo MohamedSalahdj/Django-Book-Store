@@ -22,3 +22,4 @@ typing_extensions==4.10.0
 tzdata==2024.1
 urllib3==2.2.1
 django-jazzmin==2.6.1
+gunicorn==21.2.0
