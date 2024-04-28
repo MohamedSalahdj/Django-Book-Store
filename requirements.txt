@@ -1,7 +1,7 @@
 asgiref==3.7.2
 certifi==2024.2.2
 charset-normalizer==3.3.2
-Django==5.0.3
+Django==4.2.11
 django-cors-headers==4.3.1
 django-credit-cards==0.4.1
 django-filter==24.1
