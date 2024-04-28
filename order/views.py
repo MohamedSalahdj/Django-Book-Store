@@ -21,7 +21,6 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.core.mail import EmailMessage, send_mail
 from django.template.loader import render_to_string
-from django.core.paginator import Paginator
 
 
 
@@ -31,20 +30,17 @@ from django.core.paginator import Paginator
 
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
-def get_publisher_orders(request, publisher_id,page_num):
+def get_publisher_orders(request, publisher_id):
     orders = Order.objects.filter(orderitems__publisher_id=publisher_id).distinct()
-    paginated = Paginator(orders, 2)
-    page = paginated.get_page(page_num)
-    serializer =OrderSerializer(page, many=True)
-    return Response({'orders': serializer.data,'next':paginated.get_page(page_num).has_next(),'count':orders.count()})
+    serializer =OrderSerializer(orders, many=True)
+    return Response({'orders': serializer.data})
+
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
-def get_customer_orders(request, customer_id,page_num):
+def get_customer_orders(request, customer_id):
     orders = Order.objects.filter(user_id=customer_id)
-    paginated = Paginator(orders, 2)
-    page = paginated.get_page(page_num)
-    serializer =OrderSerializer(page, many=True)
-    return Response({'orders': serializer.data,'next':paginated.get_page(page_num).has_next(),'count':orders.count()})
+    serializer = OrderSerializer(orders, many=True)
+    return Response({'orders': serializer.data})
 
 # class CreateOrderAPI(generics.GenericAPIView):
 

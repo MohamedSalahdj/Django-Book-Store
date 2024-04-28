@@ -6,7 +6,6 @@ from users.models import CustomUser, CustomPublisher
 from book.models import Book
 from users.models import Address
 from creditcards.models import CardNumberField, CardExpiryField, SecurityCodeField
-from datetime import datetime
 
 
 # class OrderStatus(models.TextChoices):
@@ -23,7 +22,6 @@ order_status = (
 class Order(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='orders')
     ordered_date = models.DateField(auto_now_add=True)
-    ordered_time=models.TimeField(default=datetime.now().strftime("%H:%M:%S"))
     updated_date = models.DateField(auto_now_add=True)
 
     status = models.CharField(max_length=20, choices=order_status)
@@ -47,6 +45,9 @@ class Order(models.Model):
             if item.total is not None:
                 total += item.total
         return round(total,2)
+    @classmethod 
+    def get_publisher_orders(self,id) :
+        return OrderItem.get_publisher_orders(id)
 
   
 
@@ -61,6 +62,9 @@ class OrderItem(models.Model):
     @property
     def total_price(self):
         return self.price * self.quantity
+    @classmethod 
+    def get_publisher_orders(self,id) :
+        return  self.objects.filter(publisher=id)
 
     def __str__(self):
         return f"{self.book.name}  ({self.quantity})"
